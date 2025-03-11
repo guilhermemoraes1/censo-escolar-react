@@ -63,7 +63,7 @@ const PropriedadesTable = ({ propriedades, setPropriedades }) => {
           {propriedades.map((propriedade, i) => {
             return (
               <tr key={i}>
-                <td>{propriedade.NO_REGIAO}</td>
+                <td>{propriedade.Regiao}</td>
                 <td>{propriedade.NO_UF}</td>
                 <td>{propriedade.NO_MUNICIPIO}</td>
                 <td>{propriedade.NO_MESORREGIAO}</td>

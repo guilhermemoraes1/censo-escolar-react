@@ -1,15 +1,19 @@
 import PropriedadesTable from '../components/PropriedadesTable';
 import { Button, Form, Modal} from 'react-bootstrap';
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { object, string, number } from 'yup';
 
 const Propriedades = () => {
   let [propriedades, setPropriedades] = useState([]);
 
   let [show, setShow] = useState(false);
-  const handleShow = () => setShow(!show);
+  const handleShow = () => setShow(true);  // Apenas abrir o modal
+
+  const handleClose = () => setShow(false);
 
   let [inputs, setInputs] = useState({
-    NO_REGIAO: '',
+    Regiao: '',
     NO_UF: '',
     NO_MUNICIPIO: '',
     NO_MESORREGIAO: '',
@@ -23,33 +27,54 @@ const Propriedades = () => {
     QT_MAT_ESP: ''
   });
 
+  let instituicoesSchema = object({
+    Regiao: string().required(),
+    NO_UF: string().min(2).max(3).required(),
+    NO_MUNICIPIO: string().required(),
+    NO_MESORREGIAO: string().required(),
+    NO_MICRORREGIAO: string().required(),
+    NO_ENTIDADE: string().min(5).required(),
+    QT_MAT_BAS: number().required(),
+    QT_MAT_INF: number().required(),
+    QT_MAT_FUND: number().required(),
+    QT_MAT_MED: number().required(),
+    QT_MAT_EJA: number().required(),
+    QT_MAT_ESP: number().required(),
+  });
+
   const handleChange = (event) => {
     let name = event.target.name;
     setInputs({ ...inputs, [name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    //POST, PUT e DELETE
-    fetch('http://localhost:3000/instituicoes', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(inputs),
-    })
-      .then((response) => {
-        if (response.ok) {
-          //Adicionar na lista.
-          setPropriedades([inputs, ...propriedades]);
-          //Fechar o modal.
-          setShow(!show);
-        }
-      })
-      .catch((error) => {});
-  };
+
+    try {
+        await instituicoesSchema.validate(inputs, { abortEarly: false });
+
+        fetch('http://localhost:3000/instituicoes', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(inputs),
+        })
+        .then((response) => {
+            if (response.ok) {
+                setPropriedades([inputs, ...propriedades]);
+                setShow(!show);
+                toast.success("Dados adicionados com sucesso.");
+            }
+        });
+    } catch (err) {
+        console.log(err.errors);
+        toast.error(err.errors[0]);
+    }
+};
+
 
   return (
     <>
@@ -65,7 +90,7 @@ const Propriedades = () => {
 
       <Modal
         show={show}
-        onHide={handleShow}
+        onHide={handleClose}
         size="lg"
         aria-labelledby="example-modal-sizes-title-lg"
       >
@@ -79,9 +104,9 @@ const Propriedades = () => {
               <Form.Control
                 type="text"
                 placeholder="Sítio Aruara"
-                id="NO_REGIAO"
-                name="NO_REGIAO"
-                value={inputs.NO_REGIAO}
+                id="regiao"
+                name="regiao"
+                value={inputs.Regiao}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -211,15 +236,17 @@ const Propriedades = () => {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <button className='botao' onClick={handleShow}>
+            <button className='botao' type="button" onClick={handleClose}>
               Fechar
             </button>
-            <button className='botao' type="submit">
+            <button className='botao' type="submit" >
               Adicionar
             </button>
           </Modal.Footer>
         </Form>
+        
       </Modal>
+      <ToastContainer />
     </>
   );
 };
