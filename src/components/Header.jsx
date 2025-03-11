@@ -12,13 +12,13 @@ import { Container, Navbar, NavDropdown } from 'react-bootstrap';
 
 const Header = () => {
   const [openNav, setOpenNav] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
+  const [temaCafe, setTemaCafe] = useState(() => {
+    return localStorage.getItem('tema') === 'cafe';
   });
 
   useEffect(() => {
-    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
-    if (isDarkTheme) {
+    localStorage.setItem('tema', temaCafe ? 'cafe' : 'claro');
+    if (temaCafe) {
       document.documentElement.style.setProperty('--cor-fundo-site', '#eee6ab');
       document.documentElement.style.setProperty('--cor-borda-footer', '#c5bc8e');
       document.documentElement.style.setProperty('--cor-btn', '#696758');
@@ -27,10 +27,10 @@ const Header = () => {
       document.documentElement.style.setProperty('--cor-borda-footer', '#ecebeb');
       document.documentElement.style.setProperty('--cor-btn', '#0056b3');
     }
-  }, [isDarkTheme]);
+  }, [temaCafe]);
 
-  const handleThemeChange = (theme) => {
-    setIsDarkTheme(theme === 'dark');
+  const handleMudarTema = (tema) => {
+    setTemaCafe(tema === 'cafe');
   };
 
   return (
@@ -58,10 +58,10 @@ const Header = () => {
                 <MDBNavbarLink href="/sobre">Sobre</MDBNavbarLink>
               </MDBNavbarItem>
               <NavDropdown className='dropdown' title="Mudar tema" id="collapsible-nav-dropdown">
-                <NavDropdown.Item onClick={() => handleThemeChange('light')}>
+                <NavDropdown.Item onClick={() => handleMudarTema('claro')}>
                   Claro
                 </NavDropdown.Item>
-                <NavDropdown.Item onClick={() => handleThemeChange('dark')}>
+                <NavDropdown.Item onClick={() => handleMudarTema('cafe')}>
                   Café
                 </NavDropdown.Item>
               </NavDropdown>
