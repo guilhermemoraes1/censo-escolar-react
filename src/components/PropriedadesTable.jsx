@@ -1,4 +1,6 @@
 import {
+  MDBBtn,
+  MDBIcon,
   MDBTable,
   MDBTableBody,
   MDBTableHead,
@@ -8,8 +10,8 @@ import TablePagination from '@mui/material/TablePagination';
 
 const PropriedadesTable = ({ propriedades, setPropriedades }) => {
   const [pagina, setPagina] = useState(0); 
-  const [linhasPorPagina, setlinhasPorPagina] = useState(10); 
-  const [totalPosts, setTotalPosts] = useState(0); 
+  const [linhasPorPagina, setLinhasPorPagina] = useState(10); 
+  const [totalPosts, setTotalPosts] = useState(0);
 
   const getPropriedades = async () => {
     try {
@@ -36,8 +38,26 @@ const PropriedadesTable = ({ propriedades, setPropriedades }) => {
   };
 
   const handleMudancaLinhasPorPagina = (event) => {
-    setlinhasPorPagina(parseInt(event.target.value, 10));
+    setLinhasPorPagina(parseInt(event.target.value, 10));
     setPagina(0); 
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3000/instituicoes/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        setPropriedades(propriedades.filter((propriedade) => propriedade.id !== id));
+        alert('Item deletado com sucesso!');
+      } else {
+        alert('Erro ao deletar item');
+      }
+    } catch (error) {
+      console.log('Erro ao deletar a propriedade:', error);
+      alert('Ocorreu um erro');
+    }
   };
 
   return (
@@ -75,17 +95,22 @@ const PropriedadesTable = ({ propriedades, setPropriedades }) => {
                 <td>{propriedade.QT_MAT_MED}</td>
                 <td>{propriedade.QT_MAT_EJA}</td>
                 <td>{propriedade.QT_MAT_ESP}</td>
-                {/* <td>
-                  <MDBBtn floating tag="a" className="mx-1" color="danger">
+                <td>
+                  <MDBBtn
+                    floating
+                    tag="a"
+                    className="mx-1"
+                    color="danger"
+                    onClick={() => handleDelete(propriedade.id)} // Chama a função de deletar
+                  >
                     <MDBIcon fas icon="trash-alt" />
                   </MDBBtn>
-                </td> */}
+                </td> 
               </tr>
             );
           })}
         </MDBTableBody>
       </MDBTable>
-
 
       <TablePagination
         component="div"
