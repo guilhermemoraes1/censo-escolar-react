@@ -5,6 +5,17 @@
     --mdb-table-border-color: #ecebeb;
 }
 
+.carousel-custom {
+    width: 80%; /* Defina a largura desejada */
+    height: 400px; /* Defina a altura desejada */
+    margin: auto; /* Centraliza o carrossel */
+}
+  
+.carousel-custom img {
+    object-fit: cover; /* Faz com que a imagem cubra o carrossel sem distorcer */
+    height: 100%; /* Garante que a imagem ocupe toda a altura */
+}
+  
 
 body {
     background-color: var(--cor-fundo-site); 
