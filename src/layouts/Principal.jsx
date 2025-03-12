@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { ToastContainer } from 'react-toastify';
 
 const Principal = () => {
   return (
@@ -8,6 +9,7 @@ const Principal = () => {
       <Header></Header>
       <Outlet />
       <Footer></Footer>
+      <ToastContainer />
     </div>
   );
 };

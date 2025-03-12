@@ -8,7 +8,7 @@ const Propriedades = () => {
   let [propriedades, setPropriedades] = useState([]);
 
   let [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);  // Apenas abrir o modal
+  const handleShow = () => setShow(true); 
 
   const handleClose = () => setShow(false);
 
@@ -104,8 +104,8 @@ const Propriedades = () => {
               <Form.Control
                 type="text"
                 placeholder="Sítio Aruara"
-                id="regiao"
-                name="regiao"
+                id="Regiao"
+                name="Regiao"
                 value={inputs.Regiao}
                 onChange={handleChange}
               />
@@ -246,7 +246,7 @@ const Propriedades = () => {
         </Form>
         
       </Modal>
-      <ToastContainer />
+      
     </>
   );
 };
