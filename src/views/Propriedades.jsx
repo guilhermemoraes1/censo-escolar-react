@@ -28,12 +28,12 @@ const Propriedades = () => {
   });
 
   let instituicoesSchema = object({
-    Regiao: string().required(),
+    Regiao: string().min(2).required(),
     NO_UF: string().min(2).max(3).required(),
-    NO_MUNICIPIO: string().required(),
-    NO_MESORREGIAO: string().required(),
-    NO_MICRORREGIAO: string().required(),
-    NO_ENTIDADE: string().min(5).required(),
+    NO_MUNICIPIO: string().min(2).required(),
+    NO_MESORREGIAO: string().min(2).required(),
+    NO_MICRORREGIAO: string().min(2).required(),
+    NO_ENTIDADE: string().min(2).min(5).required(),
     QT_MAT_BAS: number().required(),
     QT_MAT_INF: number().required(),
     QT_MAT_FUND: number().required(),
@@ -82,7 +82,6 @@ const Propriedades = () => {
             <button className='botao' onClick={handleShow}>Cadastrar Nova Escola No Formulário</button>
       </div>
 
-      {/* Clientes */}
       <PropriedadesTable
         propriedades={propriedades}
         setPropriedades={setPropriedades}
