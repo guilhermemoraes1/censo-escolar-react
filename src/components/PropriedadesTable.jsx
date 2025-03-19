@@ -10,14 +10,22 @@ import TablePagination from '@mui/material/TablePagination';
 import { toast } from 'react-toastify';
 import { Modal, Form } from 'react-bootstrap';
 import '../App.css';
+import { usePropriedadesContext } from '../contexts/PropriedadesContext';
 
-const PropriedadesTable = ({ propriedades, setPropriedades }) => {
+const PropriedadesTable = () => {
+  const {
+    propriedades, 
+    setPropriedades,
+    show, 
+    setShow
+  } = usePropriedadesContext();
+
   const [pagina, setPagina] = useState(0);
   const [linhasPorPagina, setLinhasPorPagina] = useState(10);
   const [totalPosts, setTotalPosts] = useState(0);
   const [editItem, setEditItem] = useState(null); 
   const [formData, setFormData] = useState({});  
-  const [show, setShow] = useState(false); 
+
 
   const getPropriedades = async () => {
     try {
@@ -145,7 +153,7 @@ const PropriedadesTable = ({ propriedades, setPropriedades }) => {
 
       <Modal show={show} onHide={() => setShow(false)} size="lg" aria-labelledby="modal-edicao">
         <Modal.Header closeButton>
-          <Modal.Title>Editar Propriedade</Modal.Title>
+          <Modal.Title>Editar Escola</Modal.Title>
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>

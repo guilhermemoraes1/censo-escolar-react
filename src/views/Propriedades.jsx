@@ -3,29 +3,18 @@ import { Button, Form, Modal} from 'react-bootstrap';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { object, string, number } from 'yup';
+import { usePropriedadesContext } from '../contexts/PropriedadesContext';
 
 const Propriedades = () => {
-  let [propriedades, setPropriedades] = useState([]);
-
-  let [show, setShow] = useState(false);
-  const handleShow = () => setShow(true); 
-
-  const handleClose = () => setShow(false);
-
-  let [inputs, setInputs] = useState({
-    Regiao: '',
-    NO_UF: '',
-    NO_MUNICIPIO: '',
-    NO_MESORREGIAO: '',
-    NO_MICRORREGIAO: '',
-    NO_ENTIDADE: '',
-    QT_MAT_BAS: '',
-    QT_MAT_INF: '',
-    QT_MAT_FUND: '',
-    QT_MAT_MED: '', 
-    QT_MAT_EJA: '',
-    QT_MAT_ESP: ''
-  });
+  const {
+    propriedades,
+    setPropriedades,
+    inputs,
+    show,
+    handleShow,
+    handleClose,
+    handleChange
+  } = usePropriedadesContext();
 
   let instituicoesSchema = object({
     Regiao: string().min(2).required(),
@@ -41,11 +30,6 @@ const Propriedades = () => {
     QT_MAT_EJA: number().required(),
     QT_MAT_ESP: number().required(),
   });
-
-  const handleChange = (event) => {
-    let name = event.target.name;
-    setInputs({ ...inputs, [name]: event.target.value });
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -73,8 +57,7 @@ const Propriedades = () => {
         console.log(err.errors);
         toast.error(err.errors[0]);
     }
-};
-
+  };
 
   return (
     <>
