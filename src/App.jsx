@@ -6,6 +6,7 @@ import Propriedades from './views/Propriedades';
 import Sobre from './views/Sobre';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Principal from './layouts/Principal';
+
 import { PropriedadesProvider } from './contexts/PropriedadesContext';
 
 function App() {
