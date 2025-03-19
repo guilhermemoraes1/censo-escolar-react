@@ -1,7 +1,6 @@
 import PropriedadesTable from '../components/PropriedadesTable';
-import { Button, Form, Modal} from 'react-bootstrap';
-import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { Form, Modal} from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { object, string, number } from 'yup';
 import { Formik } from 'formik';
 import { usePropriedades } from '../contexts/PropriedadesContext';
@@ -24,11 +23,6 @@ const Propriedades = () => {
     QT_MAT_ESP: number().required(),
   });
 
-  // const handleChange = (event) => {
-  //   let name = event.target.name;
-  //   setInputs({ ...inputs, [name]: event.target.value });
-  // };
-
   const handleSubmit = async (values) => {
 
     await instituicoesSchema.validate(inputs, { abortEarly: false });
@@ -49,7 +43,6 @@ const Propriedades = () => {
             toast.success("Dados adicionados com sucesso.");
         }
     });
-
 };
 
 
@@ -58,12 +51,10 @@ const Propriedades = () => {
       <div style={{display: 'flex', justifyContent: 'center', margin: '2rem'}}>
             <button className='botao' onClick={handleShow}>Cadastrar Nova Escola No Formulário</button>
       </div>
-
       <PropriedadesTable
         propriedades={propriedades}
         setPropriedades={setPropriedades}
       ></PropriedadesTable>
-
       <Modal
         show={show}
         onHide={handleClose}
@@ -281,11 +272,9 @@ const Propriedades = () => {
             </button>
           </Modal.Footer>
         </Form>
-
        )}
      </Formik>
     </Modal>
-      
     </>
   );
 };
