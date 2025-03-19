@@ -4,29 +4,10 @@ import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { object, string, number } from 'yup';
 import { Formik } from 'formik';
+import { usePropriedades } from '../contexts/PropriedadesContext';
 
 const Propriedades = () => {
-  let [propriedades, setPropriedades] = useState([]);
-
-  let [show, setShow] = useState(false);
-  const handleShow = () => setShow(true); 
-
-  const handleClose = () => setShow(false);
-
-  // let [inputs, setInputs] = useState({
-  //   Regiao: '',
-  //   NO_UF: '',
-  //   NO_MUNICIPIO: '',
-  //   NO_MESORREGIAO: '',
-  //   NO_MICRORREGIAO: '',
-  //   NO_ENTIDADE: '',
-  //   QT_MAT_BAS: '',
-  //   QT_MAT_INF: '',
-  //   QT_MAT_FUND: '',
-  //   QT_MAT_MED: '', 
-  //   QT_MAT_EJA: '',
-  //   QT_MAT_ESP: ''
-  // });
+  const {propriedades, setPropriedades, show, handleShow, handleClose } = usePropriedades(); 
 
   let instituicoesSchema = object({
     Regiao: string().min(2).required(),
@@ -64,7 +45,7 @@ const Propriedades = () => {
     .then((response) => {
         if (response.ok) {
             setPropriedades([values, ...propriedades]);
-            setShow(!show);
+            handleClose();
             toast.success("Dados adicionados com sucesso.");
         }
     });

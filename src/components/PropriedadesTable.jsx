@@ -10,14 +10,26 @@ import TablePagination from '@mui/material/TablePagination';
 import { toast } from 'react-toastify';
 import { Modal, Form } from 'react-bootstrap';
 import '../App.css';
+import { usePropriedades } from '../contexts/PropriedadesContext';
 
-const PropriedadesTable = ({ propriedades, setPropriedades }) => {
-  const [pagina, setPagina] = useState(0);
-  const [linhasPorPagina, setLinhasPorPagina] = useState(10);
-  const [totalPosts, setTotalPosts] = useState(0);
-  const [editItem, setEditItem] = useState(null); 
-  const [formData, setFormData] = useState({});  
-  const [show, setShow] = useState(false); 
+const PropriedadesTable = () => {
+  const {
+    propriedades,
+    setPropriedades,
+    show,
+    pagina,
+    setPagina,
+    linhasPorPagina,
+    setLinhasPorPagina,
+    totalPosts,
+    setTotalPosts,
+    editItem,
+    setEditItem,
+    formData,
+    setFormData,
+    handleMudancaPagina,
+    handleMudancaLinhasPorPagina
+  } = usePropriedades();  
 
   const getPropriedades = async () => {
     try {
@@ -37,15 +49,6 @@ const PropriedadesTable = ({ propriedades, setPropriedades }) => {
   useEffect(() => {
     getPropriedades();
   }, [pagina, linhasPorPagina]);
-
-  const handleMudancaPagina = (event, novaPagina) => {
-    setPagina(novaPagina);
-  };
-
-  const handleMudancaLinhasPorPagina = (event) => {
-    setLinhasPorPagina(parseInt(event.target.value, 10));
-    setPagina(0);
-  };
 
   const handleDelete = async (id) => {
     try {
