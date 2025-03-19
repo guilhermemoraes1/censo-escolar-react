@@ -7,6 +7,10 @@ export const PropriedadesProvider = ({ children }) => {
   const [propriedades, setPropriedades] = useState([]);
   const [show, setShow] = useState(false);
 
+  const [showEdit, setShowEdit] = useState(false);
+
+  const handleShowEdit = () => setShowEdit(!showEdit);
+
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
@@ -17,7 +21,9 @@ export const PropriedadesProvider = ({ children }) => {
       show,
       setShow,        
       handleShow,     
-      handleClose  
+      handleClose,
+      showEdit,
+      handleShowEdit
     }}>
       {children}
     </PropriedadesContext.Provider>

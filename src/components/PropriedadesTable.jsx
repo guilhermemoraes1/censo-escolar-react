@@ -13,11 +13,11 @@ import '../App.css';
 import { usePropriedadesContext } from '../contexts/PropriedadesContext';
 
 const PropriedadesTable = () => {
-  const {
+  const { 
     propriedades, 
     setPropriedades,
-    show, 
-    setShow
+    showEdit, 
+    handleShowEdit
   } = usePropriedadesContext();
 
   const [pagina, setPagina] = useState(0);
@@ -38,7 +38,7 @@ const PropriedadesTable = () => {
       setPropriedades(data);
       setTotalPosts(Number(totalItems));
     } catch (error) {
-      toast.error('Deu erro!', error);
+      toast.error('Deu erro!');
     }
   };
 
@@ -76,7 +76,7 @@ const PropriedadesTable = () => {
   const handleEdit = (propriedade) => {
     setEditItem(propriedade);
     setFormData({ ...propriedade });
-    setShow(true); 
+    handleShowEdit(true); 
   };
 
   const handleSubmit = async (event) => {
@@ -93,7 +93,7 @@ const PropriedadesTable = () => {
         const updatedData = await res.json();
         setPropriedades(propriedades.map(item => item.id === updatedData.id ? updatedData : item));
         toast.success("Item atualizado com sucesso!");
-        setShow(false);
+        handleShowEdit(false);
         setEditItem(null);
       } else {
         toast.error("Erro ao atualizar item");
@@ -151,7 +151,7 @@ const PropriedadesTable = () => {
         </MDBTableBody>
       </MDBTable>
 
-      <Modal show={show} onHide={() => setShow(false)} size="lg" aria-labelledby="modal-edicao">
+      <Modal show={showEdit} onHide={() => handleShowEdit(false)} size="lg" aria-labelledby="modal-edicao">
         <Modal.Header closeButton>
           <Modal.Title>Editar Escola</Modal.Title>
         </Modal.Header>
@@ -162,7 +162,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="text"
                 name="Regiao"
-                value={formData.Regiao || ''}
+                value={formData.Regiao || ""}
                 onChange={(e) => setFormData({ ...formData, Regiao: e.target.value })}
               />
             </Form.Group>
@@ -171,7 +171,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="text"
                 name="NO_UF"
-                value={formData.NO_UF || ''}
+                value={formData.NO_UF || ""}
                 onChange={(e) => setFormData({ ...formData, NO_UF: e.target.value })}
               />
             </Form.Group>
@@ -181,7 +181,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="text"
                 name="NO_MUNICIPIO"
-                value={formData.NO_MUNICIPIO || ''}
+                value={formData.NO_MUNICIPIO || ""}
                 onChange={(e) => setFormData({ ...formData, NO_MUNICIPIO: e.target.value })}
               />
             </Form.Group>
@@ -191,7 +191,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="text"
                 name="NO_MESORREGIAO"
-                value={formData.NO_MESORREGIAO || ''}
+                value={formData.NO_MESORREGIAO || ""}
                 onChange={(e) => setFormData({ ...formData, NO_MESORREGIAO: e.target.value })}
               />
             </Form.Group>
@@ -201,7 +201,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="text"
                 name="NO_MICRORREGIAO"
-                value={formData.NO_MICRORREGIAO || ''}
+                value={formData.NO_MICRORREGIAO || ""}
                 onChange={(e) => setFormData({ ...formData, NO_MICRORREGIAO: e.target.value })}
               />
             </Form.Group>
@@ -211,7 +211,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="text"
                 name="NO_ENTIDADE"
-                value={formData.NO_ENTIDADE || ''}
+                value={formData.NO_ENTIDADE || ""}
                 onChange={(e) => setFormData({ ...formData, NO_ENTIDADE: e.target.value })}
               />
             </Form.Group>
@@ -221,7 +221,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="number"
                 name="QT_MAT_BAS"
-                value={formData.QT_MAT_BAS || ''}
+                value={formData.QT_MAT_BAS || ""}
                 onChange={(e) => setFormData({ ...formData, QT_MAT_BAS: e.target.value })}
               />
             </Form.Group>
@@ -231,7 +231,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="number"
                 name="QT_MAT_INF"
-                value={formData.QT_MAT_INF || ''}
+                value={formData.QT_MAT_INF || ""}
                 onChange={(e) => setFormData({ ...formData, QT_MAT_INF: e.target.value })}
               />
             </Form.Group>
@@ -241,7 +241,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="number"
                 name="QT_MAT_FUND"
-                value={formData.QT_MAT_FUND || ''}
+                value={formData.QT_MAT_FUND || ""}
                 onChange={(e) => setFormData({ ...formData, QT_MAT_FUND: e.target.value })}
               />
             </Form.Group>
@@ -251,7 +251,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="number"
                 name="QT_MAT_MED"
-                value={formData.QT_MAT_MED || ''}
+                value={formData.QT_MAT_MED || ""}
                 onChange={(e) => setFormData({ ...formData, QT_MAT_MED: e.target.value })}
               />
             </Form.Group>
@@ -261,7 +261,7 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="number"
                 name="QT_MAT_EJA"
-                value={formData.QT_MAT_EJA || ''}
+                value={formData.QT_MAT_EJA || ""}
                 onChange={(e) => setFormData({ ...formData, QT_MAT_EJA: e.target.value })}
               />
             </Form.Group>
@@ -271,14 +271,14 @@ const PropriedadesTable = () => {
               <Form.Control
                 type="number"
                 name="QT_MAT_ESP"
-                value={formData.QT_MAT_ESP || ''}
+                value={formData.QT_MAT_ESP || ""}
                 onChange={(e) => setFormData({ ...formData, QT_MAT_ESP: e.target.value })}
               />
             </Form.Group>
 
           </Modal.Body>
           <Modal.Footer>
-            <button type="button" className="botao" onClick={() => setShow(false)}>
+            <button type="button" className="botao" onClick={() => handleShowEdit(false)}>
               Fechar
             </button>
             <button type="submit" className="botao">
