@@ -1,12 +1,18 @@
 import PropriedadesTable from '../components/PropriedadesTable';
-import { Form, Modal} from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { Button, Form, Modal} from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
 import { object, string, number } from 'yup';
-import { Formik } from 'formik';
-import { usePropriedades } from '../contexts/PropriedadesContext';
+import { usePropriedadesContext } from '../contexts/PropriedadesContext';
+import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 
 const Propriedades = () => {
-  const {propriedades, setPropriedades, show, handleShow, handleClose } = usePropriedades(); 
+  const {
+    propriedades,
+    setPropriedades,
+    show,
+    handleShow,
+    handleClose,
+  } = usePropriedadesContext();
 
   let instituicoesSchema = object({
     Regiao: string().min(2).required(),
@@ -23,38 +29,46 @@ const Propriedades = () => {
     QT_MAT_ESP: number().required(),
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, actions) => {
 
-    await instituicoesSchema.validate(inputs, { abortEarly: false });
+    try {
+        await instituicoesSchema.validate(values, { abortEarly: false });
 
-    fetch('http://localhost:3000/instituicoes', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-    })
-    .then((response) => {
-        if (response.ok) {
-            setPropriedades([values, ...propriedades]);
-            handleClose();
-            toast.success("Dados adicionados com sucesso.");
-        }
-    });
-};
-
+        fetch('http://localhost:3000/instituicoes', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(values),
+        })
+        .then((response) => {
+            if (response.ok) {
+                setPropriedades([values, ...propriedades]);
+                handleClose();
+                toast.success("Dados adicionados com sucesso.");
+            }
+        });
+    } catch (err) {
+        console.log(err.errors);
+        toast.error(err.errors[0]);
+    } finally {
+      actions.setSubmitting(false);
+    }
+  };
 
   return (
     <>
       <div style={{display: 'flex', justifyContent: 'center', margin: '2rem'}}>
             <button className='botao' onClick={handleShow}>Cadastrar Nova Escola No Formulário</button>
       </div>
+
       <PropriedadesTable
         propriedades={propriedades}
         setPropriedades={setPropriedades}
       ></PropriedadesTable>
+
       <Modal
         show={show}
         onHide={handleClose}
@@ -75,206 +89,198 @@ const Propriedades = () => {
             QT_MAT_BAS: '',
             QT_MAT_INF: '',
             QT_MAT_FUND: '',
-            QT_MAT_MED: '', 
+            QT_MAT_MED: '',
             QT_MAT_EJA: '',
             QT_MAT_ESP: ''
           }}
           validationSchema={instituicoesSchema}
           onSubmit={handleSubmit}
-     >
-       {({ values, handleChange, handleBlur, errors, touched }) => (
-        <Form onSubmit={handleSubmit}>
+        >
+          {({ values, handleChange, handleBlur, errors, touched }) => (
+          <FormikForm>
           <Modal.Body>
-            <Form.Group className="mb-3">
+          <Form.Group className="mb-3">
               <Form.Label>Região</Form.Label>
-              <Form.Control
-                    type="text"
-                    placeholder="Sítio Aruara"
-                    id="Regiao"
-                    name="Regiao"
-                    value={values.Regiao}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.Regiao && errors.Regiao}
-                  />
-                  {touched.Regiao && errors.Regiao && <div className="text-danger">{errors.Regiao}</div>}
-                </Form.Group>
+              <Field
+                type="text"
+                placeholder="Sítio Aruara"
+                id="Regiao"
+                name="Regiao"
+                value={values.Regiao}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="form-control"
+              />
+              <ErrorMessage name="Regiao" component="div" className="text-danger" />
+            </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Estado</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="NO_UF"
-                    name="NO_UF"
-                    value={values.NO_UF}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.NO_UF && errors.NO_UF}
-                  />
-                  {touched.NO_UF && errors.NO_UF && <div className="text-danger">{errors.NO_UF}</div>}
-                </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Estado</Form.Label>
+              <Field
+                type="text"
+                id="NO_UF"
+                name="NO_UF"
+                value={values.NO_UF}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="form-control"
+              />
+              <ErrorMessage name="NO_UF" component="div" className="text-danger" />
+            </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Municipio</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="NO_MUNICIPIO"
-                    name="NO_MUNICIPIO"
-                    value={values.NO_MUNICIPIO}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.NO_MUNICIPIO && errors.NO_MUNICIPIO}
-                  />
-                  {touched.NO_MUNICIPIO && errors.NO_MUNICIPIO && <div className="text-danger">{errors.NO_MUNICIPIO}</div>}
-                </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Município</Form.Label>
+              <Field
+                type="text"
+                id="NO_MUNICIPIO"
+                name="NO_MUNICIPIO"
+                value={values.NO_MUNICIPIO}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="form-control"
+              />
+              <ErrorMessage name="NO_MUNICIPIO" component="div" className="text-danger" />
+            </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Mesorregião</Form.Label>
-                  <Form.Control
-                    type="text"
-                    id="NO_MESORREGIAO"
-                    name="NO_MESORREGIAO"
-                    value={values.NO_MESORREGIAO}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.NO_MESORREGIAO && errors.NO_MESORREGIAO}
-                  />
-                  {touched.NO_MESORREGIAO && errors.NO_MESORREGIAO && <div className="text-danger">{errors.NO_MESORREGIAO}</div>}
-                </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Mesorregião</Form.Label>
+              <Field
+                type="text"
+                id="NO_MESORREGIAO"
+                name="NO_MESORREGIAO"
+                value={values.NO_MESORREGIAO}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="form-control"
+              />
+              <ErrorMessage name="NO_MESORREGIAO" component="div" className="text-danger" />
+            </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Microrregião</Form.Label>
-              <Form.Control
+              <Field
                 type="text"
-                placeholder="Nome da Microrregião"
                 id="NO_MICRORREGIAO"
                 name="NO_MICRORREGIAO"
                 value={values.NO_MICRORREGIAO}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.NO_MICRORREGIAO && errors.NO_MICRORREGIAO}
+                className="form-control"
               />
-              {touched.NO_MICRORREGIAO && errors.NO_MICRORREGIAO && <div className="text-danger">{errors.NO_MICRORREGIAO}</div>}
+              <ErrorMessage name="NO_MICRORREGIAO" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Escola</Form.Label>
-              <Form.Control
+              <Field
                 type="text"
-                placeholder="Nome da escola"
                 id="NO_ENTIDADE"
                 name="NO_ENTIDADE"
                 value={values.NO_ENTIDADE}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.NO_ENTIDADE && errors.NO_ENTIDADE}
+                className="form-control"
               />
-              {touched.NO_ENTIDADE && errors.NO_ENTIDADE && <div className="text-danger">{errors.NO_ENTIDADE}</div>}
+              <ErrorMessage name="NO_ENTIDADE" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Quantidade de Matrícula Geral</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="10"
+              <Field
+                type="number"
                 id="QT_MAT_BAS"
                 name="QT_MAT_BAS"
                 value={values.QT_MAT_BAS}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.QT_MAT_BAS && errors.QT_MAT_BAS}
+                className="form-control"
               />
-              {touched.QT_MAT_BAS && errors.QT_MAT_BAS && <div className="text-danger">{errors.QT_MAT_BAS}</div>}
+              <ErrorMessage name="QT_MAT_BAS" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Quantidade de Matrícula Infantil</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="10"
+              <Field
+                type="number"
                 id="QT_MAT_INF"
                 name="QT_MAT_INF"
                 value={values.QT_MAT_INF}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.QT_MAT_INF && errors.QT_MAT_INF}
+                className="form-control"
               />
-              {touched.QT_MAT_INF && errors.QT_MAT_INF && <div className="text-danger">{errors.QT_MAT_INF}</div>}
+              <ErrorMessage name="QT_MAT_INF" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Quantidade de Matrícula Fundamental</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="10"
+              <Field
+                type="number"
                 id="QT_MAT_FUND"
                 name="QT_MAT_FUND"
                 value={values.QT_MAT_FUND}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.QT_MAT_FUND && errors.QT_MAT_FUND}
+                className="form-control"
               />
-              {touched.QT_MAT_FUND && errors.QT_MAT_FUND && <div className="text-danger">{errors.QT_MAT_FUND}</div>}
+              <ErrorMessage name="QT_MAT_FUND" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Quantidade de Matrícula Ensino Médio</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="10"
+              <Field
+                type="number"
                 id="QT_MAT_MED"
                 name="QT_MAT_MED"
                 value={values.QT_MAT_MED}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.QT_MAT_MED && errors.QT_MAT_MED}
+                className="form-control"
               />
-              {touched.QT_MAT_MED && errors.QT_MAT_MED && <div className="text-danger">{errors.QT_MAT_MED}</div>}
+              <ErrorMessage name="QT_MAT_MED" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Quantidade de Matrícula EJA</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="10"
+              <Field
+                type="number"
                 id="QT_MAT_EJA"
                 name="QT_MAT_EJA"
                 value={values.QT_MAT_EJA}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.QT_MAT_EJA && errors.QT_MAT_EJA}
+                className="form-control"
               />
-              {touched.QT_MAT_EJA && errors.QT_MAT_EJA && <div className="text-danger">{errors.QT_MAT_EJA}</div>}
+              <ErrorMessage name="QT_MAT_EJA" component="div" className="text-danger" />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Quantidade de Matrícula Especial</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="10"
+              <Field
+                type="number"
                 id="QT_MAT_ESP"
                 name="QT_MAT_ESP"
                 value={values.QT_MAT_ESP}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                isInvalid={touched.QT_MAT_ESP && errors.QT_MAT_ESP}
+                className="form-control"
               />
-              {touched.QT_MAT_ESP && errors.QT_MAT_ESP && <div className="text-danger">{errors.QT_MAT_ESP}</div>}
+              <ErrorMessage name="QT_MAT_ESP" component="div" className="text-danger" />
             </Form.Group>
-
           </Modal.Body>
           <Modal.Footer>
             <button className='botao' type="button" onClick={handleClose}>
               Fechar
             </button>
-            <button className='botao' >
+            <button className='botao' type="submit" >
               Adicionar
             </button>
           </Modal.Footer>
-        </Form>
-       )}
-     </Formik>
-    </Modal>
+          </FormikForm>
+          )}
+        </Formik>
+      </Modal>
+      
     </>
   );
 };
